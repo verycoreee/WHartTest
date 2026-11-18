@@ -416,6 +416,19 @@ _ENV_ALLOWLIST = (
     "https_proxy",
     "no_proxy",
     "HF_ENDPOINT",
+    # Windows 下 socket 初始化必需；缺失会导致 winsock 报 WinError 10106
+    # （WSAEPROVIDERFAILEDINIT），表现为"连不上本机后端"，极易误判为网络问题。
+    # 注意：Windows 上 os.environ 的键名是全大写，而 build_skill_env 里
+    # source = dict(os.environ) 会丢掉大小写不敏感特性，所以必须写大写键名，
+    # 否则取不到值、静默跳过。
+    "SYSTEMROOT",
+    "SYSTEMDRIVE",
+    "WINDIR",
+    "COMSPEC",
+    "PATHEXT",
+    "USERPROFILE",
+    "APPDATA",
+    "LOCALAPPDATA",
 )
 
 # 二次防线：即使某个键被加入白名单，名称命中机密模式也一律剥离。
